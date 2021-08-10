@@ -6,8 +6,7 @@ public class InvoiceGenerator {
 	private static final double MINIMUM_FARE = 5;
 
 	/**
-	 * UC1-This method is to calculate the fare of ride with the given time and
-	 * distance
+	 * This method is to calculate the fare of ride with the given time and distance
 	 * 
 	 * @param distance
 	 * @param time
@@ -21,16 +20,11 @@ public class InvoiceGenerator {
 
 	}
 
-	/**
-	 * UC2 - This method is calculating aggregate cab fare of multiple rides
-	 * 
-	 * @param rides
-	 * @return calculate total fare
-	 */
-	public double calculateFare(Ride[] rides) {
+	public InvoiceDetails calculateFare(Ride[] rides) {
 		double totalFare = 0;
 		for (Ride ride : rides)
 			totalFare += this.calculateFare(ride.distance, ride.time);
-		return totalFare;
+		return new InvoiceDetails(rides.length, totalFare);
 	}
+
 }

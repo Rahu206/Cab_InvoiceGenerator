@@ -29,11 +29,14 @@ public class InvoiceServiceTest {
 	}
 
 	@Test
-	public void givenMultipleRides_ShoulReturnTotalFare() {
+	public void givenMultipleRides_ShoulReturnInvoiceSummary() {
+
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+
 		Ride[] rides = { new Ride(25.0, 15), new Ride(15, 5), new Ride(0.1, 1), };
-		double totalFare = invoiceGenerator.calculateFare(rides);
-		Assert.assertEquals(425, totalFare, 0.0);
+		InvoiceDetails invoiceDetails = invoiceGenerator.calculateFare(rides);
+		InvoiceDetails expectedInvoiceDetails = new InvoiceDetails(3, 425.0);
+		Assert.assertEquals(expectedInvoiceDetails, invoiceDetails);
 	}
 
 }
