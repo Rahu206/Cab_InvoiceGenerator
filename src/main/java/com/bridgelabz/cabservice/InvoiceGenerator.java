@@ -1,35 +1,79 @@
 package com.bridgelabz.cabservice;
 
 public class InvoiceGenerator {
-	private static final double MIN_COST_PER_KM = 10.0;
-	private static final int COST_PER_TIME = 1;
-	private static final double MINIMUM_FARE = 5.0;
-	public final RideRepository rideRepository;
+	 private static final int NORMALRIDE = 1;
+	    private static final int PREMIUMRIDE = 2;
+	    private static double MINIMUM_COST_PER_KM = 0.0;
+	    private static int COST_PER_TIME = 0;
+	    private static double MINIMUM_FARE = 0;
 
-	public InvoiceGenerator() {
-		this.rideRepository = new RideRepository();
-	}
+	    /**
+	     * Purpose : Given distance and time,
+	     *           Return total fare for the journey
+	     *
+	     * Condition : If minimum total fare is less than the MINIMUM_FARE, return MINIMUM_FARE
+	     *
+	     * @param distance
+	     * @param time
+	     * @return
+	     */
 
-	public double calaculateFare(double distance, int time) {
-		double totalFare = distance * MIN_COST_PER_KM + time * COST_PER_TIME;
-		return (totalFare < MINIMUM_FARE) ? MINIMUM_FARE : totalFare;
-	}
+	    public double calculateFare(double distance, int time, int option) {
 
-	public InvoiceDetails calaculateFare(Ride[] rides) {
-		double totalFare = 0;
-		for (Ride ride : rides) {
-			totalFare += this.calaculateFare(ride.distance, ride.time);
-		}
-		return new InvoiceDetails(rides.length, totalFare);
-	}
+	        /**
+	         * Given Values For Normal Ride
+	         */
 
-	public void addRides(String userId, Ride[] rides) {
-		rideRepository.addRides(userId, rides);
+	        if(option == NORMALRIDE) {
+	            MINIMUM_COST_PER_KM = 10.0;
+	            COST_PER_TIME = 1;
+	            MINIMUM_FARE = 5;
+	        }
 
-	}
+	        /**
+	         * Given Values For Premium Ride
+	         */
 
-	public InvoiceDetails getInvoiceSummary(String userId) {
-		return this.calaculateFare(rideRepository.getRides(userId));
-	}
+	        else if(option == PREMIUMRIDE) {
+	            MINIMUM_COST_PER_KM = 15.0;
+	            COST_PER_TIME = 2;
+	            MINIMUM_FARE = 20;
+	        }
 
+	        double totalFare = distance * MINIMUM_COST_PER_KM + time * COST_PER_TIME;
+	        return Math.max(totalFare, MINIMUM_FARE);
+	    }
+
+	    /**
+	     * Purpose : Given distance and time for multiple rides,
+	     *           Return aggregate total fare for all the journey
+	     *
+	     * @param rides
+	     * @return
+	     */
+
+	    public double calculateTotalFare(Ride[] rides, int option) {
+	        double totalFare = 0.0;
+	        for(Ride ride : rides) {
+	            totalFare += this.calculateFare(ride.distance, ride.time, option);
+	        }
+	        return totalFare;
+	    }
+
+	    /**
+	     * Purpose : Given distance and time for multiple rides,
+	     *           Calculate aggregate total fare for all the journey
+	     *           Calculate the average fare per ride taking total number of rides and total fare as input
+	     *
+	     * @param rides
+	     * @return
+	     */
+
+	    public InvoiceDetails calculateFareSummary(Ride[] rides, int option) {
+	        double totalFare = 0.0;
+	        for(Ride ride : rides) {
+	            totalFare += this.calculateFare(ride.distance, ride.time, option);
+	        }
+	        return new InvoiceDetails(rides.length, totalFare);
+	    }
 }
