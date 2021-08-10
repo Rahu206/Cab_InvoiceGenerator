@@ -22,10 +22,18 @@ public class InvoiceServiceTest {
 	@Test
 	public void givenLessDistanceAndTime_ShouldReturnMinimumFare() {
 		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
-		double distance = 0;
-		int time = 0;
+		double distance = 0.1;
+		int time = 1;
 		double totalFare = invoiceGenerator.calculateFare(distance, time);
 		Assert.assertEquals(5, totalFare, 0.0);
+	}
+
+	@Test
+	public void givenMultipleRides_ShoulReturnTotalFare() {
+		InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+		Ride[] rides = { new Ride(25.0, 15), new Ride(15, 5), new Ride(0.1, 1), };
+		double totalFare = invoiceGenerator.calculateFare(rides);
+		Assert.assertEquals(425, totalFare, 0.0);
 	}
 
 }
