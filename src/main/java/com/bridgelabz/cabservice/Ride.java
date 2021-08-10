@@ -3,6 +3,7 @@ package com.bridgelabz.cabservice;
 public class Ride {
 	public double distance;
 	public int time;
+	
 
 	public Ride(double distance, int time) {
 		super();
